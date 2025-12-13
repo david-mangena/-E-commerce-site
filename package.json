@@ -16,7 +16,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "monocart-reporter": "^3.7.0",
+    "monocart-reporter": "^4.0.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.0.1"
   }
