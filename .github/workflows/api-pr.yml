@@ -1,0 +1,70 @@
+name: PR - API Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'tests/api/**'
+      - 'test-data/**'
+      - '.github/workflows/api-pr.yml'
+
+jobs:
+  api-test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run API Tests
+        run: npx playwright test tests/api
+        env:
+          CI: true
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-report-${{ matrix.node-version }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Test Results (JUnit)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-test-results-${{ matrix.node-version }}
+          path: test-results/
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: test-results/junit.xml
+          check_name: API Test Results - Node ${{ matrix.node-version }}
+
+      - name: Comment PR with API Report
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const link = `[📊 API Test Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ API tests validation completed! ${link}`
+            });
