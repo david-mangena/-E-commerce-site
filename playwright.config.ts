@@ -29,7 +29,7 @@ export default defineConfig({
   reporter: [
     ['html'],
     ['junit', { outputFile: 'test-results/junit.xml' }],
-    ['@replit/monocart-reporter', {
+    ['monocart-reporter', {
       name: 'Playwright Test Report',
       outputFolder: 'playwright-report',
       includeTestArguments: true,
