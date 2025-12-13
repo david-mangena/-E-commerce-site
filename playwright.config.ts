@@ -39,6 +39,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     navigationTimeout: 30000,
     actionTimeout: 10000,
+    testIdAttribute: 'data-test',
   },
 
   /* Configure projects for major browsers */

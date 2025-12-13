@@ -1,9 +1,7 @@
 import { test, expect } from '../page.object.model/fixtures.ts';    
 import { testUsers } from '../test-data/users.ts';
 
-const { describe } = require('@playwright/test');
-
-describe('E-commerce site', () => {  
+test.describe('E-commerce site', () => {  
     test.beforeEach(async ({ page }) => {
         await page.goto('/');
         await expect(page).toHaveTitle('Swag Labs');
