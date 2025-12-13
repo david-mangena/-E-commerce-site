@@ -10,6 +10,10 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     
     steps:
       - uses: actions/checkout@v4
@@ -51,3 +55,4 @@ jobs:
         with:
           files: test-results/junit.xml
           check_name: Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
