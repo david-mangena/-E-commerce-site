@@ -1,5 +1,5 @@
-import { test, expect } from '../page.object.model/fixtures.ts';    
-import { testUsers } from '../test-data/users.ts';
+import { test, expect } from '../../page.object.model/fixtures.ts';    
+import { testUsers } from '../../test-data/users.ts';
 
 test.describe('E-commerce site', () => {  
     test.beforeEach(async ({ page }) => {

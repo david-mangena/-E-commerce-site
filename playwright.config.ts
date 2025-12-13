@@ -29,12 +29,20 @@ export default defineConfig({
   reporter: [
     ['html'],
     ['junit', { outputFile: 'test-results/junit.xml' }],
+    ['@replit/monocart-reporter', {
+      name: 'Playwright Test Report',
+      outputFolder: 'playwright-report',
+      includeTestArguments: true,
+      workers: 4,
+      columns: ['title', 'duration', 'status'],
+      detailView: true,
+      attachments: {
+        lineNumbers: true,
+      },
+    }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: 'https://www.saucedemo.com',
-
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     navigationTimeout: 30000,
@@ -45,8 +53,20 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'], headless: true },
+      name: 'UI Tests',
+      testDir: './tests/ui',
+      use: { 
+        ...devices['Desktop Chrome'], 
+        baseURL: 'https://www.saucedemo.com',
+        headless: true 
+      },
+    },
+    {
+      name: 'API Tests',
+      testDir: './tests/api',
+      use: { 
+        baseURL: 'https://restful-booker.herokuapp.com',
+      },
     },
   ],
 });
