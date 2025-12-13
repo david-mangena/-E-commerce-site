@@ -2,19 +2,26 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, master ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, master ]
 
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       
       - name: Install dependencies
         run: npm ci
@@ -26,16 +33,24 @@ jobs:
         run: npm test
       
       - name: Upload HTML report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-node-${{ matrix.node-version }}
           path: playwright-report/
           retention-days: 30
       
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results
+          name: test-results-node-${{ matrix.node-version }}
           path: test-results/
+          retention-days: 30
+      
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: test-results/junit.xml
+          check_name: Test Results
