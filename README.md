@@ -283,10 +283,6 @@ Ensure no other services are running on required ports for API tests.
 - [Monocart Reporter](https://github.com/cenfun/monocart-reporter)
 - [Page Object Model Pattern](https://playwright.dev/docs/pom)
 
-## 📄 License
-
-ISC
-
 ## 🤝 Contributing
 
 1. Create a feature branch
